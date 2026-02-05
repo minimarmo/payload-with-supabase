@@ -69,6 +69,10 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    'brand-logos': BrandLogo;
+    faq: Faq;
+    blogs: Blog;
+    business: Business;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,13 +82,17 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'brand-logos': BrandLogosSelect<false> | BrandLogosSelect<true>;
+    faq: FaqSelect<false> | FaqSelect<true>;
+    blogs: BlogsSelect<false> | BlogsSelect<true>;
+    business: BusinessSelect<false> | BusinessSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
   globals: {};
@@ -121,7 +129,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -145,7 +153,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -161,10 +169,105 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brand-logos".
+ */
+export interface BrandLogo {
+  id: number;
+  name_th: string;
+  name_en: string;
+  image: number | Media;
+  link?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq".
+ */
+export interface Faq {
+  id: number;
+  question_th: string;
+  question_en?: string | null;
+  answer_th: string;
+  answer_en?: string | null;
+  status: 'available' | 'disable';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blogs".
+ */
+export interface Blog {
+  id: number;
+  title: string;
+  cover_image: number | Media;
+  category: 'knowledge' | 'news';
+  orientation: 'horizontal' | 'vertical';
+  /**
+   * ใช้สำหรับ URL เช่น my-first-post (ตัวเล็ก, ใช้ - แทนเว้นวรรค)
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  publishedAt?: string | null;
+  content?:
+    | {
+        image?: (number | null) | Media;
+        description: string;
+        /**
+         * Aspect ratio of the image (e.g., 16/9, 1/1, 4/3)
+         */
+        aspect?: string | null;
+        layout: 'top_bottom' | 'bottom_top' | 'left_right' | 'right_left';
+        id?: string | null;
+      }[]
+    | null;
+  link_facebook?: string | null;
+  link_instagram?: string | null;
+  link_tiktok?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "business".
+ */
+export interface Business {
+  id: number;
+  type: string;
+  description?: string | null;
+  cover_image: number | Media;
+  status: 'draft' | 'published';
+  projects?:
+    | {
+        title: string;
+        short_detail?: string | null;
+        bullets?:
+          | {
+              item: string;
+              id?: string | null;
+            }[]
+          | null;
+        main_image: number | Media;
+        gallery?:
+          | {
+              no: number;
+              image: number | Media;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -181,20 +284,36 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'brand-logos';
+        value: number | BrandLogo;
+      } | null)
+    | ({
+        relationTo: 'faq';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'blogs';
+        value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'business';
+        value: number | Business;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -204,10 +323,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -227,7 +346,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -272,6 +391,91 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "brand-logos_select".
+ */
+export interface BrandLogosSelect<T extends boolean = true> {
+  name_th?: T;
+  name_en?: T;
+  image?: T;
+  link?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faq_select".
+ */
+export interface FaqSelect<T extends boolean = true> {
+  question_th?: T;
+  question_en?: T;
+  answer_th?: T;
+  answer_en?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blogs_select".
+ */
+export interface BlogsSelect<T extends boolean = true> {
+  title?: T;
+  cover_image?: T;
+  category?: T;
+  orientation?: T;
+  slug?: T;
+  status?: T;
+  publishedAt?: T;
+  content?:
+    | T
+    | {
+        image?: T;
+        description?: T;
+        aspect?: T;
+        layout?: T;
+        id?: T;
+      };
+  link_facebook?: T;
+  link_instagram?: T;
+  link_tiktok?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "business_select".
+ */
+export interface BusinessSelect<T extends boolean = true> {
+  type?: T;
+  description?: T;
+  cover_image?: T;
+  status?: T;
+  projects?:
+    | T
+    | {
+        title?: T;
+        short_detail?: T;
+        bullets?:
+          | T
+          | {
+              item?: T;
+              id?: T;
+            };
+        main_image?: T;
+        gallery?:
+          | T
+          | {
+              no?: T;
+              image?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
