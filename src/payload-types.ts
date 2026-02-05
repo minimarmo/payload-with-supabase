@@ -237,6 +237,10 @@ export interface Business {
   type: string;
   description?: string | null;
   cover_image: number | Media;
+  /**
+   * ใช้สำหรับ URL เช่น my-first-post (ตัวเล็ก, ใช้ - แทนเว้นวรรค)
+   */
+  slug: string;
   status: 'draft' | 'published';
   projects?:
     | {
@@ -452,6 +456,7 @@ export interface BusinessSelect<T extends boolean = true> {
   type?: T;
   description?: T;
   cover_image?: T;
+  slug?: T;
   status?: T;
   projects?:
     | T

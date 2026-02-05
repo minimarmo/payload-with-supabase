@@ -42,6 +42,38 @@ export const Business: CollectionConfig = {
       label: 'Cover Image',
     },
     {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      index: true,
+      label: 'Slug',
+      admin: {
+        position: 'sidebar',
+        description: 'ใช้สำหรับ URL เช่น my-first-post (ตัวเล็ก, ใช้ - แทนเว้นวรรค)',
+      },
+      validate: (value: any) => {
+        if (!value) return 'Slug is required'
+        if (typeof value !== 'string') return 'Invalid slug'
+
+        const v = value.trim()
+
+        // ห้ามมีเว้นวรรค
+        if (/\s/.test(v)) return 'Slug must not contain spaces'
+
+        // อนุญาตเฉพาะ a-z 0-9 และ -
+        if (!/^[a-z0-9-]+$/.test(v)) return 'Use only lowercase letters, numbers, and hyphens (-)'
+
+        // กันขึ้นต้น/ลงท้ายด้วย -
+        if (v.startsWith('-') || v.endsWith('-')) return 'Slug must not start or end with -'
+
+        // กัน -- ติดกัน
+        if (v.includes('--')) return 'Slug must not contain consecutive hyphens (--)'
+
+        return true
+      },
+    },
+    {
       name: 'status',
       type: 'select',
       admin: {
