@@ -1,67 +1,64 @@
-# Payload Blank Template
+## Setup
 
-This template comes configured with the bare minimum to get started on anything you need.
+### 1. Environment Variables
 
-## Quick start
+คัดลอกไฟล์ตัวอย่างแล้วตั้งค่า environment variables ที่จำเป็น
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+```bash
+cp .env.example .env
+```
 
-## Quick Start - local setup
+จากนั้นแก้ไขไฟล์ `.env` และกำหนดค่าต่อไปนี้:
 
-To spin up this template locally, follow these steps:
+- `DATABASE_URL` – PostgreSQL connection string (เช่น Supabase)
+- `PAYLOAD_SECRET` – secret key สำหรับ Payload (แนะนำให้สุ่มค่าใหม่)
+- `S3_BUCKET` – ชื่อ Supabase Storage bucket
+- `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` – S3 access keys
+- `S3_ENDPOINT` / `S3_REGION` – ค่า S3-compatible endpoint ของ Supabase
 
-### Clone
+> ℹ️ โปรเจกต์นี้ใช้ **Supabase Postgres** และ **Supabase Storage (S3-compatible)**
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+---
 
-### Development
+### 2. Install Dependencies
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+ติดตั้ง dependencies ทั้งหมดด้วย npm
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+```bash
+npm install
+```
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+> ต้องใช้ Node.js เวอร์ชัน `>= 18.20`
 
-#### Docker (Optional)
+---
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+### 3. Database Migration
 
-To do so, follow these steps:
+รัน Payload migrations เพื่อสร้าง schema ของโปรเจกต์
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+```bash
+npm run db:migrate
+```
 
-## How it works
+- คำสั่งนี้จะสร้างหรืออัปเดตเฉพาะตารางของ Payload
+- จะไม่ลบหรือกระทบตารางอื่นที่มีอยู่ในฐานข้อมูล
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+เหมาะสำหรับใช้งานกับฐานข้อมูลที่มีตารางจากระบบอื่นอยู่แล้ว
 
-### Collections
+---
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+### 4. Run the Project
 
-- #### Users (Authentication)
+เริ่มรันโปรเจกต์ในโหมด development
 
-  Users are auth-enabled collections that have access to the admin panel.
+```bash
+npm run dev
+```
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+จากนั้นเปิดเบราว์เซอร์ที่:
 
-- #### Media
+```
+http://localhost:3000/admin
+```
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+เพื่อเข้าใช้งาน Payload Admin UI
