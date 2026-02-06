@@ -111,6 +111,15 @@ export const Business: CollectionConfig = {
           label: 'Short Detail',
         },
         {
+          name: 'long_detail',
+          type: 'textarea',
+          required: false,
+          label: 'Long Detail',
+          admin: {
+            description: 'รายละเอียดแบบยาว (แสดงในหน้า Project Detail)',
+          },
+        },
+        {
           name: 'bullets',
           type: 'array',
           label: 'Bullets',

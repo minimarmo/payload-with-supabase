@@ -246,6 +246,10 @@ export interface Business {
     | {
         title: string;
         short_detail?: string | null;
+        /**
+         * รายละเอียดแบบยาว (แสดงในหน้า Project Detail)
+         */
+        long_detail?: string | null;
         bullets?:
           | {
               item: string;
@@ -463,6 +467,7 @@ export interface BusinessSelect<T extends boolean = true> {
     | {
         title?: T;
         short_detail?: T;
+        long_detail?: T;
         bullets?:
           | T
           | {
