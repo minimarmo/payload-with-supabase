@@ -10,14 +10,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_business_status" AS ENUM('draft', 'published');
   CREATE TABLE "users_sessions" (
   	"_order" integer NOT NULL,
-  	"_parent_id" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"created_at" timestamp(3) with time zone,
   	"expires_at" timestamp(3) with time zone NOT NULL
   );
   
   CREATE TABLE "users" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"email" varchar NOT NULL,
@@ -30,7 +30,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "media" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"alt" varchar NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -46,17 +46,17 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "brand_logos" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"name_th" varchar NOT NULL,
   	"name_en" varchar NOT NULL,
-  	"image_id" integer NOT NULL,
+  	"image_id" uuid NOT NULL,
   	"link" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
   CREATE TABLE "faq" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"question_th" varchar NOT NULL,
   	"question_en" varchar,
   	"answer_th" varchar NOT NULL,
@@ -68,18 +68,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   
   CREATE TABLE "blogs_content" (
   	"_order" integer NOT NULL,
-  	"_parent_id" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
-  	"image_id" integer,
+  	"image_id" uuid,
   	"description" varchar NOT NULL,
   	"aspect" varchar,
   	"layout" "enum_blogs_content_layout" NOT NULL
   );
   
   CREATE TABLE "blogs" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"title" varchar NOT NULL,
-  	"cover_image_id" integer NOT NULL,
+  	"cover_image_id" uuid NOT NULL,
   	"category" "enum_blogs_category" DEFAULT 'knowledge' NOT NULL,
   	"orientation" "enum_blogs_orientation" DEFAULT 'horizontal' NOT NULL,
   	"slug" varchar NOT NULL,
@@ -104,24 +104,24 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" varchar NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"no" numeric NOT NULL,
-  	"image_id" integer NOT NULL
+  	"image_id" uuid NOT NULL
   );
   
   CREATE TABLE "business_projects" (
   	"_order" integer NOT NULL,
-  	"_parent_id" integer NOT NULL,
+  	"_parent_id" uuid NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"title" varchar NOT NULL,
   	"short_detail" varchar,
   	"long_detail" varchar,
-  	"main_image_id" integer NOT NULL
+  	"main_image_id" uuid NOT NULL
   );
   
   CREATE TABLE "business" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"type" varchar NOT NULL,
   	"description" varchar,
-  	"cover_image_id" integer NOT NULL,
+  	"cover_image_id" uuid NOT NULL,
   	"slug" varchar NOT NULL,
   	"status" "enum_business_status" DEFAULT 'draft' NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -129,13 +129,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   );
   
   CREATE TABLE "payload_kv" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"key" varchar NOT NULL,
   	"data" jsonb NOT NULL
   );
   
   CREATE TABLE "payload_locked_documents" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"global_slug" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
@@ -144,18 +144,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "payload_locked_documents_rels" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"order" integer,
-  	"parent_id" integer NOT NULL,
+  	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
-  	"users_id" integer,
-  	"media_id" integer,
-  	"brand_logos_id" integer,
-  	"faq_id" integer,
-  	"blogs_id" integer,
-  	"business_id" integer
+  	"users_id" uuid,
+  	"media_id" uuid,
+  	"brand_logos_id" uuid,
+  	"faq_id" uuid,
+  	"blogs_id" uuid,
+  	"business_id" uuid
   );
   
   CREATE TABLE "payload_preferences" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"key" varchar,
   	"value" jsonb,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -165,13 +165,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE "payload_preferences_rels" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"order" integer,
-  	"parent_id" integer NOT NULL,
+  	"parent_id" uuid NOT NULL,
   	"path" varchar NOT NULL,
-  	"users_id" integer
+  	"users_id" uuid
   );
   
   CREATE TABLE "payload_migrations" (
-  	"id" serial PRIMARY KEY NOT NULL,
+  	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   	"name" varchar,
   	"batch" numeric,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,

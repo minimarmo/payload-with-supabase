@@ -92,7 +92,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   fallbackLocale: null;
   globals: {};
@@ -129,7 +129,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -153,7 +153,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -172,10 +172,10 @@ export interface Media {
  * via the `definition` "brand-logos".
  */
 export interface BrandLogo {
-  id: number;
+  id: string;
   name_th: string;
   name_en: string;
-  image: number | Media;
+  image: string | Media;
   link?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -185,7 +185,7 @@ export interface BrandLogo {
  * via the `definition` "faq".
  */
 export interface Faq {
-  id: number;
+  id: string;
   question_th: string;
   question_en?: string | null;
   answer_th: string;
@@ -199,9 +199,9 @@ export interface Faq {
  * via the `definition` "blogs".
  */
 export interface Blog {
-  id: number;
+  id: string;
   title: string;
-  cover_image: number | Media;
+  cover_image: string | Media;
   category: 'knowledge' | 'news';
   orientation: 'horizontal' | 'vertical';
   /**
@@ -212,7 +212,7 @@ export interface Blog {
   publishedAt?: string | null;
   content?:
     | {
-        image?: (number | null) | Media;
+        image?: (string | null) | Media;
         description: string;
         /**
          * Aspect ratio of the image (e.g., 16/9, 1/1, 4/3)
@@ -233,10 +233,10 @@ export interface Blog {
  * via the `definition` "business".
  */
 export interface Business {
-  id: number;
+  id: string;
   type: string;
   description?: string | null;
-  cover_image: number | Media;
+  cover_image: string | Media;
   /**
    * ใช้สำหรับ URL เช่น my-first-post (ตัวเล็ก, ใช้ - แทนเว้นวรรค)
    */
@@ -256,11 +256,11 @@ export interface Business {
               id?: string | null;
             }[]
           | null;
-        main_image: number | Media;
+        main_image: string | Media;
         gallery?:
           | {
               no: number;
-              image: number | Media;
+              image: string | Media;
               id?: string | null;
             }[]
           | null;
@@ -275,7 +275,7 @@ export interface Business {
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
+  id: string;
   key: string;
   data:
     | {
@@ -292,36 +292,36 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'brand-logos';
-        value: number | BrandLogo;
+        value: string | BrandLogo;
       } | null)
     | ({
         relationTo: 'faq';
-        value: number | Faq;
+        value: string | Faq;
       } | null)
     | ({
         relationTo: 'blogs';
-        value: number | Blog;
+        value: string | Blog;
       } | null)
     | ({
         relationTo: 'business';
-        value: number | Business;
+        value: string | Business;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -331,10 +331,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -354,7 +354,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;

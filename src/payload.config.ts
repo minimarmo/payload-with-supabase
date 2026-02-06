@@ -36,6 +36,7 @@ export default buildConfig({
     },
     migrationDir: path.resolve(dirname, 'migrations'),
     push: false,
+    idType: 'uuid',
   }),
   sharp,
   plugins: [
